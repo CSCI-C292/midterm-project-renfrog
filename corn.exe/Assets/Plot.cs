@@ -22,7 +22,7 @@ public class Plot : MonoBehaviour
     }
 
 
-    void Water() {
+    public void Water() {
         switch(_health){
             case HealthStates.Dry:
                 _health = HealthStates.Watered;
@@ -38,7 +38,13 @@ public class Plot : MonoBehaviour
         }
     }
 
-    void Harvest(){
+    public void Harvest(){
         _age = PlantStates.Empty;
+    }
+
+    public void Plant(){
+        if (_age == PlantStates.Empty){
+            _age = PlantStates.Seeds;
+        }
     }
 }
