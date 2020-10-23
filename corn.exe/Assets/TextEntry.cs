@@ -27,15 +27,15 @@ public class TextEntry : MonoBehaviour
             _instruction = input.text;
             input.text = "";
             ChatBox cx = chatbox.GetComponent<ChatBox>();
-            cx.UpdateScreen(_instruction);
-            TextMatching();
+            string result = TextMatching();
+            cx.UpdateScreen(_instruction + "\n" + result);
         }
     }
 
-    void TextMatching(){
+    string TextMatching(){
         string pattern = @"[a-z]+";
         Match m = Regex.Match(_instruction, pattern, RegexOptions.IgnoreCase);
-        VerifyInstructions(m.Value);
+        return VerifyInstructions(m.Value);
     }
 
     private void PopulateOptions(){
@@ -50,8 +50,8 @@ public class TextEntry : MonoBehaviour
                                     + ">use 'harvest' to harvest your corn" + '\n'
                                     + ">use 'wait' to skip to the next day" + '\n'
                                     + ">ex: 'plant a1 b1 b3' or 'water b2'");
-        OptionsAndResponses.Add("other", "please use the format 'instruction a1 a2 a3'" + 
-                                    '\n' + "use the keyword help for a list of commands");
+        OptionsAndResponses.Add("other", ">please use the format 'instruction a1 a2 a3'" + 
+                                    '\n' + ">use the keyword help for a list of commands");
     }
 
     private string VerifyInstructions(string instruct) {
