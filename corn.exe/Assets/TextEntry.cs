@@ -39,25 +39,28 @@ public class TextEntry : MonoBehaviour
     }
 
     private void PopulateOptions(){
-        OptionsAndResponses.Add("plant", ">you planted corn into your plots");
-        OptionsAndResponses.Add("water", ">you watered your plants");
-        OptionsAndResponses.Add("feed", ">you fed your corn");
-        OptionsAndResponses.Add("harvest", ">you harvested your corn");
-        OptionsAndResponses.Add("wait", ">one day passes");
-        OptionsAndResponses.Add("help", ">use 'plant' to plant corn" + '\n'
-                                    + ">use 'water' to water your corn" + '\n'
-                                    + ">use 'feed' to feed your corn" + '\n'
-                                    + ">use 'harvest' to harvest your corn" + '\n'
-                                    + ">use 'wait' to skip to the next day" + '\n'
-                                    + ">ex: 'plant a1 b1 b3' or 'water b2'");
-        OptionsAndResponses.Add("other", ">please use the format 'instruction a1 a2 a3'" + 
-                                    '\n' + ">use the keyword help for a list of commands");
+        OptionsAndResponses.Add("plant", "--you planted corn into your plots");
+        OptionsAndResponses.Add("water", "--you watered your plants");
+        OptionsAndResponses.Add("feed", "--you fed your corn");
+        OptionsAndResponses.Add("harvest", "--you harvested your corn");
+        OptionsAndResponses.Add("wait", "--one day passes");
+        OptionsAndResponses.Add("help", "--use 'plant' to plant corn" + '\n'
+                                    + "--use 'water' to water your corn" + '\n'
+                                    + "--use 'feed' to feed your corn" + '\n'
+                                    + "--use 'harvest' to harvest your corn" + '\n'
+                                    + "--use 'wait' to skip to the next day" + '\n'
+                                    + "--ex: 'plant a1 b1 b3' or 'water b2'");
+        OptionsAndResponses.Add("other", "--please use the format 'instruction a1 a2 a3'" + 
+                                    '\n' + "--use the keyword help for a list of commands");
     }
 
     private string VerifyInstructions(string instruct) {
         string _otherResponse = "other";
         List<Plot> plots = FindPlots();
         if(!OptionsAndResponses.ContainsKey(instruct)){
+            return OptionsAndResponses[_otherResponse];
+        }
+        else if(plots.Capacity == 0 && instruct != "help" && instruct != "wait"){
             return OptionsAndResponses[_otherResponse];
         }
         else {
