@@ -7242,6 +7242,7 @@ MonoBehaviour:
   input: {fileID: 1274302978}
   chatbox: {fileID: 386848982}
   runtimeData: {fileID: 0}
+  _seedsPrefab: {fileID: 9196384016916662940, guid: 0028fd40437004fe2a5d5a379db73986, type: 3}
 --- !u!114 &1274302978
 MonoBehaviour:
   m_ObjectHideFlags: 0

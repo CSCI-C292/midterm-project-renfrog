@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Plot : MonoBehaviour
+
+public class Plot : MonoBehaviour 
 {
 
     public HealthStates _health;
     public PlantStates _age;
+    private Vector3 position;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -46,5 +49,13 @@ public class Plot : MonoBehaviour
         if (_age == PlantStates.Empty){
             _age = PlantStates.Seeds;
         }
+    }
+
+    public void SetPosition(Vector3 pos){
+        position = pos;
+    }
+
+    public Vector3 GetPosition(){
+        return position;
     }
 }

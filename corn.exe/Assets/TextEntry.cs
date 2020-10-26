@@ -11,12 +11,14 @@ public class TextEntry : MonoBehaviour
     [SerializeField] TMP_InputField input;
     [SerializeField] ChatBox chatbox;
     [SerializeField] RunData runtimeData;
+    [SerializeField] GameObject _seedsPrefab;
     Dictionary<string, string> OptionsAndResponses = new Dictionary<string, string>();
-
+    List<Vector3> _NeedsPlants = new List<Vector3>();
     String _instruction;
     
     void Start()
     {
+        SetUpPlots();
         PopulateOptions();
     }
 
@@ -68,8 +70,12 @@ public class TextEntry : MonoBehaviour
                 case "help":
                     return OptionsAndResponses[instruct];
                 case "plant":
+                    var i = 0;
                     foreach(Plot p in plots){
                         p.Plant();
+                        Instantiate(_seedsPrefab, _NeedsPlants[i], Quaternion.identity);
+                        Debug.Log(i);
+                        i++;
                     }
                     return OptionsAndResponses[instruct];
                 case "water":
@@ -93,34 +99,56 @@ public class TextEntry : MonoBehaviour
 
     private List<Plot> FindPlots(){
         List<Plot> NeedChanges = new List<Plot>();
+        _NeedsPlants = new List<Vector3>();
         if(_instruction.Contains("a1")){
             NeedChanges.Add(RunData.A1);
+            _NeedsPlants.Add(new Vector3(-6.31f,-0.38f,-2.25f));
         }
-        else if(_instruction.Contains("a2")){
+        if(_instruction.Contains("a2")){
             NeedChanges.Add(RunData.A2);
+            _NeedsPlants.Add(new Vector3(-5.19f, 0.15f, -2.25f));
         }
-        else if(_instruction.Contains("a3")){
+        if(_instruction.Contains("a3")){
             NeedChanges.Add(RunData.A3);
+            _NeedsPlants.Add(new Vector3(-3.95f, 0.66f, -2.25f));
         }
-        else if(_instruction.Contains("b1")){
+        if(_instruction.Contains("b1")){
             NeedChanges.Add(RunData.B1);
+            _NeedsPlants.Add(new Vector3(-5.17f, -0.95f, -2.25f));
         }
-        else if(_instruction.Contains("b2")){
+        if(_instruction.Contains("b2")){
             NeedChanges.Add(RunData.B2);
+            _NeedsPlants.Add(new Vector3(-3.93f, -0.40f, -2.25f));
         }
-        else if(_instruction.Contains("b3")){
+        if(_instruction.Contains("b3")){
             NeedChanges.Add(RunData.B3);
+            _NeedsPlants.Add(new Vector3(-2.76f, 0.11f, -2.25f));
         }
-        else if(_instruction.Contains("c1")){
+        if(_instruction.Contains("c1")){
             NeedChanges.Add(RunData.C1);
+            _NeedsPlants.Add(new Vector3(-3.98f, -1.46f, -2.25f));
         }
-        else if(_instruction.Contains("c2")){
+        if(_instruction.Contains("c2")){
             NeedChanges.Add(RunData.C2);
+            _NeedsPlants.Add(new Vector3(-2.76f, -0.97f, -2.25f));
         }
-        else if(_instruction.Contains("c3")){
+        if(_instruction.Contains("c3")){
             NeedChanges.Add(RunData.C3);
+            _NeedsPlants.Add(new Vector3(-1.56f, -0.38f, -2.25f));
         }
         return NeedChanges;
+    }
+
+    private void SetUpPlots() {
+        RunData.A1.SetPosition(new Vector3(-6.31f,-0.38f,-2.25f));
+        RunData.A2.SetPosition(new Vector3(-5.19f, 0.15f, -2.25f));
+        RunData.A3.SetPosition(new Vector3(-3.95f, 0.66f, -2.25f));
+        RunData.B1.SetPosition(new Vector3(-5.17f, -0.95f, -2.25f));
+        RunData.B2.SetPosition(new Vector3(-3.93f, -0.40f, -2.25f));
+        RunData.B3.SetPosition(new Vector3(-2.76f, 0.11f, -2.25f));
+        RunData.C1.SetPosition(new Vector3(-3.98f, -1.46f, -2.25f));
+        RunData.C2.SetPosition(new Vector3(-2.76f, -0.97f, -2.25f));
+        RunData.C3.SetPosition(new Vector3(-1.56f, -0.38f, -2.25f));
     }
 
 }
