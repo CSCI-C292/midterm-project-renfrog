@@ -21,19 +21,22 @@ public class Plot : MonoBehaviour
         seedsPrefab.SetActive(true);
         youngPrefab.SetActive(true);
         adultPrefab.SetActive(true);
+        wateredPlot.SetActive(true);
         seedsPrefab.SetActive(false);
         youngPrefab.SetActive(false);
         adultPrefab.SetActive(false);
+        wateredPlot.SetActive(false);
     }
 
     public void Water() {
-        Debug.Log("why am i here");
         switch(_health){
             case HealthStates.Dry:
                 _health = HealthStates.Watered;
+                wateredPlot.SetActive(true);
                 break;
             case HealthStates.Watered:
                 _health = HealthStates.OverWatered;
+                wateredPlot.SetActive(false);
                 break;
             case HealthStates.OverWatered:
                 _health = HealthStates.Drowned;
@@ -75,6 +78,8 @@ public class Plot : MonoBehaviour
                     break;
             }
         }
+        _health = HealthStates.Dry;
+        wateredPlot.SetActive(false);
     }
 
     public void SetPosition(Vector3 pos){
