@@ -12,6 +12,8 @@ public class Plot : MonoBehaviour
     public GameObject youngPrefab;
     public GameObject adultPrefab;
     public GameObject wateredPlot;
+    public GameObject overWateredPlot;
+    public GameObject drownedPlot;
     
     void Start()
     {
@@ -22,10 +24,14 @@ public class Plot : MonoBehaviour
         youngPrefab.SetActive(true);
         adultPrefab.SetActive(true);
         wateredPlot.SetActive(true);
+        overWateredPlot.SetActive(true);
+        drownedPlot.SetActive(true);
         seedsPrefab.SetActive(false);
         youngPrefab.SetActive(false);
         adultPrefab.SetActive(false);
         wateredPlot.SetActive(false);
+        overWateredPlot.SetActive(false);
+        drownedPlot.SetActive(false);
     }
 
     public void Water() {
@@ -37,21 +43,30 @@ public class Plot : MonoBehaviour
             case HealthStates.Watered:
                 _health = HealthStates.OverWatered;
                 wateredPlot.SetActive(false);
+                overWateredPlot.SetActive(true);
                 break;
             case HealthStates.OverWatered:
                 _health = HealthStates.Drowned;
+                overWateredPlot.SetActive(false);
+                drownedPlot.SetActive(true);
                 break;
             default:
                 break;
         }
     }
 
-    public void Harvest(){
-        _age = PlantStates.Empty;
-        seedsPrefab.SetActive(false);
-        youngPrefab.SetActive(false);
-        adultPrefab.SetActive(false);
-
+    public bool Harvested(){
+        if (_age == PlantStates.Adult){
+            _age = PlantStates.Empty;
+            seedsPrefab.SetActive(false);
+            youngPrefab.SetActive(false);
+            adultPrefab.SetActive(false);
+            wateredPlot.SetActive(false);
+            overWateredPlot.SetActive(false);
+            drownedPlot.SetActive(false);
+            return true;
+        }
+        return false;
     }
 
     public void Plant(){
@@ -80,6 +95,8 @@ public class Plot : MonoBehaviour
         }
         _health = HealthStates.Dry;
         wateredPlot.SetActive(false);
+        overWateredPlot.SetActive(false);
+        drownedPlot.SetActive(false);
     }
 
     public void SetPosition(Vector3 pos){

@@ -40,7 +40,6 @@ public class TextEntry : MonoBehaviour
         string res = PassTime();
         if (res != ""){
                 cx.UpdateScreen("another day passes");
-                Debug.Log("in update");
         }
     }
 
@@ -63,7 +62,8 @@ public class TextEntry : MonoBehaviour
                                     + "--use 'feed' to feed your corn" + '\n'
                                     + "--use 'harvest' to harvest your corn" + '\n'
                                     + "--use 'wait' to skip to the next day" + '\n'
-                                    + "--ex: 'plant a1 b1 b3' or 'water b2'");
+                                    + "--use 'sacrifice' to sacrifice your corn" + '\n'
+                                    + "--ex: 'plant a1 b1 b3' or 'sacrifice b2'");
         OptionsAndResponses.Add("other", "--please use the format 'instruction a1 a2 a3'" + 
                                     '\n' + "--use the keyword help for a list of commands");
     }
@@ -94,24 +94,22 @@ public class TextEntry : MonoBehaviour
                 case "feed":
                     return OptionsAndResponses[instruct];
                 case "harvest":
-                    _harvested = _harvested = 10;
                     foreach(Plot p in plots){
-                        p.Harvest();
+                        var worked = p.Harvested();
+                        if (worked){
+                            _harvested++;
+                        }
+                        Debug.Log(_harvested);
                     }
                     return OptionsAndResponses[instruct];
                 case "sacrifice":
                     _sacrificed = _sacrificed + _harvested;
-                    /*
                     if(_sacrificed > _limit){
-                        Rain rain = this.GetComponent<Rain>();
-                        rain.IncreaseRain();
                         _limit = _limit + 10;
                     }
-                    */
                     return OptionsAndResponses[instruct];
                 case "wait":
                     SkipTime();
-                    Debug.Log("im here");
                     DayPass();
                     return OptionsAndResponses[instruct];
                 default:
@@ -134,7 +132,6 @@ public class TextEntry : MonoBehaviour
     }
 
     private void DayPass(){
-        Debug.Log("did i get hre");
         for (int i = 0; i < 9; i++){
             var current = gameData.plotList[i];
             current.Grow();
