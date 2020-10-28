@@ -8785,6 +8785,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 1274302978}
   chatbox: {fileID: 386848982}
+  rain: {fileID: 397989011}
   gameData: {fileID: 790363783}
   timeLeft: 20
 --- !u!114 &1274302978

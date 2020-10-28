@@ -10,6 +10,7 @@ public class TextEntry : MonoBehaviour
 {
     [SerializeField] TMP_InputField input;
     [SerializeField] ChatBox chatbox;
+    [SerializeField] Rain rain;
     Dictionary<string, string> OptionsAndResponses = new Dictionary<string, string>();
     List<Vector3> _NeedsPlants = new List<Vector3>();
     public GameData gameData;
@@ -106,6 +107,7 @@ public class TextEntry : MonoBehaviour
                     _sacrificed = _sacrificed + _harvested;
                     if(_sacrificed > _limit){
                         _limit = _limit + 10;
+                        rain.IncreaseRain();
                     }
                     return OptionsAndResponses[instruct];
                 case "wait":
