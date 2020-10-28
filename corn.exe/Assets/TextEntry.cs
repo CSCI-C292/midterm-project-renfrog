@@ -10,27 +10,37 @@ public class TextEntry : MonoBehaviour
 {
     [SerializeField] TMP_InputField input;
     [SerializeField] ChatBox chatbox;
-    [SerializeField] RunData runtimeData;
-    [SerializeField] GameObject _seedsPrefab;
     Dictionary<string, string> OptionsAndResponses = new Dictionary<string, string>();
     List<Vector3> _NeedsPlants = new List<Vector3>();
+    public GameData gameData;
+
     String _instruction;
+    public float timeLeft = 20.0f;
+    int _days = 0;
+    int _sacrificed = 0;
+    int _harvested = 0;
+    int _limit = 10;
     
     void Start()
     {
-        SetUpPlots();
         PopulateOptions();
     }
 
     // Update is called once per frame
     void Update()
     {
+        ChatBox cx = chatbox.GetComponent<ChatBox>();
         if(Input.GetButtonDown("Submit") && input.text != ""){
             _instruction = input.text;
             input.text = "";
-            ChatBox cx = chatbox.GetComponent<ChatBox>();
             string result = TextMatching();
             cx.UpdateScreen(_instruction + "\n" + result);
+        }
+
+        string res = PassTime();
+        if (res != ""){
+                cx.UpdateScreen("another day passes");
+                Debug.Log("in update");
         }
     }
 
@@ -46,6 +56,8 @@ public class TextEntry : MonoBehaviour
         OptionsAndResponses.Add("feed", "--you fed your corn");
         OptionsAndResponses.Add("harvest", "--you harvested your corn");
         OptionsAndResponses.Add("wait", "--one day passes");
+        OptionsAndResponses.Add("sacrifice", "--you sacrifice your harvested corn" + '\n'
+                                    + "--it begins to rain harder");
         OptionsAndResponses.Add("help", "--use 'plant' to plant corn" + '\n'
                                     + "--use 'water' to water your corn" + '\n'
                                     + "--use 'feed' to feed your corn" + '\n'
@@ -62,7 +74,7 @@ public class TextEntry : MonoBehaviour
         if(!OptionsAndResponses.ContainsKey(instruct)){
             return OptionsAndResponses[_otherResponse];
         }
-        else if(plots.Capacity == 0 && instruct != "help" && instruct != "wait"){
+        else if(plots.Capacity == 0 && instruct != "help" && instruct != "wait" && instruct != "sacrifice"){
             return OptionsAndResponses[_otherResponse];
         }
         else {
@@ -70,12 +82,8 @@ public class TextEntry : MonoBehaviour
                 case "help":
                     return OptionsAndResponses[instruct];
                 case "plant":
-                    var i = 0;
                     foreach(Plot p in plots){
                         p.Plant();
-                        Instantiate(_seedsPrefab, _NeedsPlants[i], Quaternion.identity);
-                        Debug.Log(i);
-                        i++;
                     }
                     return OptionsAndResponses[instruct];
                 case "water":
@@ -86,9 +94,25 @@ public class TextEntry : MonoBehaviour
                 case "feed":
                     return OptionsAndResponses[instruct];
                 case "harvest":
+                    _harvested = _harvested = 10;
+                    foreach(Plot p in plots){
+                        p.Harvest();
+                    }
+                    return OptionsAndResponses[instruct];
+                case "sacrifice":
+                    _sacrificed = _sacrificed + _harvested;
+                    /*
+                    if(_sacrificed > _limit){
+                        Rain rain = this.GetComponent<Rain>();
+                        rain.IncreaseRain();
+                        _limit = _limit + 10;
+                    }
+                    */
                     return OptionsAndResponses[instruct];
                 case "wait":
-                    Debug.Log("wait time");
+                    SkipTime();
+                    Debug.Log("im here");
+                    DayPass();
                     return OptionsAndResponses[instruct];
                 default:
                     return OptionsAndResponses[_otherResponse];    
@@ -97,58 +121,65 @@ public class TextEntry : MonoBehaviour
         }     
     }
 
+    private String PassTime(){
+        timeLeft -= Time.deltaTime;
+        if (timeLeft < 0)
+        {
+            _days++;
+            timeLeft = 20.0f;
+            DayPass();
+            return "another day passes";
+        }
+        return "";
+    }
+
+    private void DayPass(){
+        Debug.Log("did i get hre");
+        for (int i = 0; i < 9; i++){
+            var current = gameData.plotList[i];
+            current.Grow();
+        }
+    
+    }
+
+    private void SkipTime(){
+        timeLeft = 20.0f;
+        _days++;
+    }
+
     private List<Plot> FindPlots(){
         List<Plot> NeedChanges = new List<Plot>();
         _NeedsPlants = new List<Vector3>();
+        Debug.Log(_instruction);
         if(_instruction.Contains("a1")){
-            NeedChanges.Add(RunData.A1);
-            _NeedsPlants.Add(new Vector3(-6.31f,-0.38f,-2.25f));
+            NeedChanges.Add(gameData.A1);
         }
         if(_instruction.Contains("a2")){
-            NeedChanges.Add(RunData.A2);
-            _NeedsPlants.Add(new Vector3(-5.19f, 0.15f, -2.25f));
+            NeedChanges.Add(gameData.A2);
         }
         if(_instruction.Contains("a3")){
-            NeedChanges.Add(RunData.A3);
-            _NeedsPlants.Add(new Vector3(-3.95f, 0.66f, -2.25f));
+            NeedChanges.Add(gameData.A3);
         }
         if(_instruction.Contains("b1")){
-            NeedChanges.Add(RunData.B1);
-            _NeedsPlants.Add(new Vector3(-5.17f, -0.95f, -2.25f));
+            NeedChanges.Add(gameData.B1);
         }
         if(_instruction.Contains("b2")){
-            NeedChanges.Add(RunData.B2);
-            _NeedsPlants.Add(new Vector3(-3.93f, -0.40f, -2.25f));
+            NeedChanges.Add(gameData.B2);
         }
         if(_instruction.Contains("b3")){
-            NeedChanges.Add(RunData.B3);
-            _NeedsPlants.Add(new Vector3(-2.76f, 0.11f, -2.25f));
+            NeedChanges.Add(gameData.B3);
         }
         if(_instruction.Contains("c1")){
-            NeedChanges.Add(RunData.C1);
-            _NeedsPlants.Add(new Vector3(-3.98f, -1.46f, -2.25f));
+            NeedChanges.Add(gameData.C1);
         }
         if(_instruction.Contains("c2")){
-            NeedChanges.Add(RunData.C2);
-            _NeedsPlants.Add(new Vector3(-2.76f, -0.97f, -2.25f));
+            NeedChanges.Add(gameData.C2);
         }
         if(_instruction.Contains("c3")){
-            NeedChanges.Add(RunData.C3);
-            _NeedsPlants.Add(new Vector3(-1.56f, -0.38f, -2.25f));
+            NeedChanges.Add(gameData.C3);
         }
         return NeedChanges;
-    }
-
-    private void SetUpPlots() {
-        RunData.A1.SetPosition(new Vector3(-6.31f,-0.38f,-2.25f));
-        RunData.A2.SetPosition(new Vector3(-5.19f, 0.15f, -2.25f));
-        RunData.A3.SetPosition(new Vector3(-3.95f, 0.66f, -2.25f));
-        RunData.B1.SetPosition(new Vector3(-5.17f, -0.95f, -2.25f));
-        RunData.B2.SetPosition(new Vector3(-3.93f, -0.40f, -2.25f));
-        RunData.B3.SetPosition(new Vector3(-2.76f, 0.11f, -2.25f));
-        RunData.C1.SetPosition(new Vector3(-3.98f, -1.46f, -2.25f));
-        RunData.C2.SetPosition(new Vector3(-2.76f, -0.97f, -2.25f));
-        RunData.C3.SetPosition(new Vector3(-1.56f, -0.38f, -2.25f));
+        
     }
 
 }
