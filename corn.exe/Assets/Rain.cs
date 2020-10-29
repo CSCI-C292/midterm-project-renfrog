@@ -23,8 +23,13 @@ public class Rain : MonoBehaviour
     //found how to work with runtime particles here:
     //https://forum.unity.com/threads/how-do-you-change-a-particle-systems-emission-rate-over-time-in-script.824292/
     public void IncreaseRain(){
-        currentEmissionRate = currentEmissionRate * 2;
+        currentEmissionRate = currentEmissionRate * 4;
         var rainEmission = rain.emission;
         rainEmission.rateOverTime = currentEmissionRate;
+    }
+
+    public void RestartRain(){
+        var rainEmission = rain.emission;
+        rainEmission.rateOverTime = 5;
     }
 }

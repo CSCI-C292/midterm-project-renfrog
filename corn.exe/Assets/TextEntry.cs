@@ -11,9 +11,11 @@ public class TextEntry : MonoBehaviour
     [SerializeField] TMP_InputField input;
     [SerializeField] ChatBox chatbox;
     [SerializeField] Rain rain;
+    [SerializeField] GameObject _gameState;
     Dictionary<string, string> OptionsAndResponses = new Dictionary<string, string>();
     List<Vector3> _NeedsPlants = new List<Vector3>();
     public GameData gameData;
+    
 
     String _instruction;
     public float timeLeft = 20.0f;
@@ -21,6 +23,7 @@ public class TextEntry : MonoBehaviour
     int _sacrificed = 0;
     int _harvested = 0;
     int _limit = 10;
+    int _ending = 50;
     
     void Start()
     {
@@ -109,6 +112,12 @@ public class TextEntry : MonoBehaviour
                         _limit = _limit + 10;
                         rain.IncreaseRain();
                     }
+                    if(_sacrificed > _ending){
+                        Debug.Log("why did i end:" + _sacrificed);
+                        GameOver.Instance.InitiateGameOver();
+                        Restart();
+                    }
+                    _harvested = 0;
                     return OptionsAndResponses[instruct];
                 case "wait":
                     SkipTime();
@@ -149,7 +158,6 @@ public class TextEntry : MonoBehaviour
     private List<Plot> FindPlots(){
         List<Plot> NeedChanges = new List<Plot>();
         _NeedsPlants = new List<Vector3>();
-        Debug.Log(_instruction);
         if(_instruction.Contains("a1")){
             NeedChanges.Add(gameData.A1);
         }
@@ -179,6 +187,12 @@ public class TextEntry : MonoBehaviour
         }
         return NeedChanges;
         
+    }
+
+    private void Restart(){
+        _harvested = 0;
+        _sacrificed = 0;
+        rain.RestartRain();
     }
 
 }

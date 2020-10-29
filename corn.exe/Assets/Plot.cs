@@ -19,7 +19,6 @@ public class Plot : MonoBehaviour
     {
         _age = PlantStates.Empty;
         _health = HealthStates.Dry;
-        Debug.Log("wow");
         seedsPrefab.SetActive(true);
         youngPrefab.SetActive(true);
         adultPrefab.SetActive(true);
