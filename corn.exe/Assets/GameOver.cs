@@ -15,6 +15,8 @@ public class GameOver : MonoBehaviour
     public static GameOver Instance;
 
     void Awake() {
+        _gameOverText.SetActive(true);
+        _gameOverText.SetActive(false);
         Instance = this;
     } 
 
@@ -24,8 +26,11 @@ public class GameOver : MonoBehaviour
         }
     }
 
-    public void InitiateGameOver() {
+    public void InitiateGameOver(int days) {
         _isGameOver = true;
+        _gameOverText.GetComponent<Text>().text = "You have flooded the state of Indiana" + "\n" + "in " + days + " days." 
+                               + "\n" + "Press 'r' if you would like to begin again " + "\n" + "and flood Indiana faster.";
+        Debug.Log(_gameOverText);
         _gameOverText.SetActive(true);
     }
 }

@@ -16,13 +16,14 @@ public class TextEntry : MonoBehaviour
     List<Vector3> _NeedsPlants = new List<Vector3>();
     public GameData gameData;
     
+    
 
     String _instruction;
     public float timeLeft = 20.0f;
     int _days = 0;
     int _sacrificed = 0;
     int _harvested = 0;
-    int _limit = 10;
+    int _limit = 9;
     int _ending = 50;
     
     void Start()
@@ -59,8 +60,7 @@ public class TextEntry : MonoBehaviour
         OptionsAndResponses.Add("feed", "--you fed your corn");
         OptionsAndResponses.Add("harvest", "--you harvested your corn");
         OptionsAndResponses.Add("wait", "--one day passes");
-        OptionsAndResponses.Add("sacrifice", "--you sacrifice your harvested corn" + '\n'
-                                    + "--it begins to rain harder");
+        OptionsAndResponses.Add("sacrifice", "--you sacrifice your harvested corn");
         OptionsAndResponses.Add("help", "--use 'plant' to plant corn" + '\n'
                                     + "--use 'water' to water your corn" + '\n'
                                     + "--use 'feed' to feed your corn" + '\n'
@@ -108,13 +108,12 @@ public class TextEntry : MonoBehaviour
                     return OptionsAndResponses[instruct];
                 case "sacrifice":
                     _sacrificed = _sacrificed + _harvested;
-                    if(_sacrificed > _limit){
-                        _limit = _limit + 10;
+                    if(_sacrificed >= _limit){
+                        _limit = _limit + 9;
                         rain.IncreaseRain();
                     }
                     if(_sacrificed > _ending){
-                        Debug.Log("why did i end:" + _sacrificed);
-                        GameOver.Instance.InitiateGameOver();
+                        GameOver.Instance.InitiateGameOver(_days);
                         Restart();
                     }
                     _harvested = 0;
@@ -137,7 +136,7 @@ public class TextEntry : MonoBehaviour
             _days++;
             timeLeft = 20.0f;
             DayPass();
-            return "another day passes";
+            return "--another day passes";
         }
         return "";
     }
@@ -183,6 +182,17 @@ public class TextEntry : MonoBehaviour
             NeedChanges.Add(gameData.C2);
         }
         if(_instruction.Contains("c3")){
+            NeedChanges.Add(gameData.C3);
+        }
+        if(_instruction.Contains("all")){
+            NeedChanges.Add(gameData.A1);
+            NeedChanges.Add(gameData.A2);
+            NeedChanges.Add(gameData.A3);
+            NeedChanges.Add(gameData.B1);
+            NeedChanges.Add(gameData.B2);
+            NeedChanges.Add(gameData.B3);
+            NeedChanges.Add(gameData.C1);
+            NeedChanges.Add(gameData.C2);
             NeedChanges.Add(gameData.C3);
         }
         return NeedChanges;
