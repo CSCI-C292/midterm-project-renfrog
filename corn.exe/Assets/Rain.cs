@@ -32,4 +32,8 @@ public class Rain : MonoBehaviour
         var rainEmission = rain.emission;
         rainEmission.rateOverTime = 5;
     }
+
+    public void StartEndRain() {
+        rain.enableEmission = true;
+    }
 }
