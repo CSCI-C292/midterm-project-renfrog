@@ -77,6 +77,7 @@ public class InstructionManager : MonoBehaviour
         string _otherResponse = "other";
         List<Plot> plots = FindPlots();
         String toFormat = "";
+        var temporaryHarvest = 0;
         if(!OptionsAndResponses.ContainsKey(instruct)){
             return OptionsAndResponses[_otherResponse];
         }
@@ -106,11 +107,13 @@ public class InstructionManager : MonoBehaviour
                     foreach(Plot p in plots){
                         var worked = p.Harvested();
                         if (worked){
+                            temporaryHarvest++;
                             _harvested++;
                         }
                     }
+                    
                     toFormat = OptionsAndResponses[instruct];
-                    return String.Format(toFormat, _harvested);
+                    return String.Format(toFormat, temporaryHarvest);
                 case "sacrifice":
                     _sacrificed = _sacrificed + _harvested;
                     if(_sacrificed >= _limit){
